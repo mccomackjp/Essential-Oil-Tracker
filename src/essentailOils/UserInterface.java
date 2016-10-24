@@ -41,7 +41,8 @@ public class UserInterface extends JFrame{
         KeyEventHandler keyHandler = new KeyEventHandler();
 
         String[][] tableData = new String[0][0];
-        oilsListHeader = new String[] {"Oil Name","Attributes", "Clashes"};
+        oilsListHeader = new String[] {"Oil Name","Attributes", "Clashes", "Price per Ounce",
+                "Concentrations"};
         tableModel = new DefaultTableModel(tableData, oilsListHeader);
         JPanel topLayout = new JPanel();
 		JButton filterButton = new JButton("Filter Results");
@@ -73,7 +74,7 @@ public class UserInterface extends JFrame{
         oilsListTable.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
-        controller.saveFile("data/test.csv", oilOutput);
+        controller.saveFile("data/oils.csv", oilOutput);
     }
 
     private void filterOils() {

@@ -1,11 +1,14 @@
 package essentailOils;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +29,7 @@ public class EssentialOilsTracker {
     private int numColumns;
 
 	public EssentialOilsTracker(){
-        numColumns = 3;
+        numColumns = 5;
         oils = new ArrayList<>();
         filePath = "data/EssentialOilsData.csv";
 		loadOilData();
@@ -88,13 +91,22 @@ public class EssentialOilsTracker {
             data[i][0] = oils.get(i).getName();
             data[i][1] = oils.get(i).getAttributes().toString();
             data[i][2] = oils.get(i).getClashes().toString();
+            data[i][3] = "$" + String.valueOf(oils.get(i).getPricePerOunce());
+            Collection<String> concentrations = oils.get(i).getConcentrations();
+            if (concentrations.size() > 0){
+                data[i][4] = oils.get(i).getConcentrations().toString();
+            } else {
+                data[i][4] = "100%";
+            }
+
         }
         return data;
     }
 
     public void saveFile(String path, String[][] data){
         List cells = new ArrayList<String>();
-        String[] headers = {"Oil Name","Attributes", "Clashes", ","} ;
+        String[] headers = {"Oil Name,","Attributes,", "Clashes,", "Price per Ounce,",
+                "Concentrations,", ","} ;
         cells.addAll(Arrays.asList(headers));
         for (int i=0; i<data.length; i++){
             for (int j=0; j<data[i].length; j++){
@@ -107,7 +119,7 @@ public class EssentialOilsTracker {
             cells.add(",");
         }
         try {
-            CSVfileHandler.saveFile(path, cells);
+            OilFileHandler.saveFile(path, cells);
         }catch (IOException e) {
                 e.printStackTrace();
             }
@@ -135,20 +147,46 @@ public class EssentialOilsTracker {
 
         private static EssentialOil parseOilDataLine(String line){
             EssentialOil oil = null;
-            if (line.length()>3) {
+            if (line.length()>5) {
                 String[] oilData = line.split(",");
                 String name = oilData[0].trim();
                 String[] attributes = oilData[1].split(";");
                 String[] clashes = oilData[2].split(";");
+                double price = 0.0;
+                if (oilData.length > 3 && oilData[3].length() > 3){
+                    price = Double.valueOf(oilData[3]);
+                }
+                String[] concentrations = null;
+                if (oilData.length > 4){
+                    concentrations = oilData[4].split(";");
+                }
                 oil = new EssentialOil(name);
+                oil.setPricePerOunce(price);
                 for (String s : attributes) {
                     oil.addAttribute(s.trim());
                 }
                 for (String s : clashes) {
                     oil.addClash(s.trim());
                 }
+                if (concentrations != null) {
+                    for (String s : concentrations) {
+                        oil.addConcentrations(s);
+                    }
+                }
             }
             return oil;
+        }
+
+        public static void saveFile(String path, List<String> cells) throws IOException{
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+            for (String cell : cells){
+                if (cell.equals(",")){
+                    writer.newLine();
+                } else {
+                    writer.write(cell);
+                }
+            }
+            writer.close();
         }
 
     }
