@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -89,6 +90,27 @@ public class EssentialOilsTracker {
             data[i][2] = oils.get(i).getClashes().toString();
         }
         return data;
+    }
+
+    public void saveFile(String path, String[][] data){
+        List cells = new ArrayList<String>();
+        String[] headers = {"Oil Name","Attributes", "Clashes", ","} ;
+        cells.addAll(Arrays.asList(headers));
+        for (int i=0; i<data.length; i++){
+            for (int j=0; j<data[i].length; j++){
+                data[i][j] = data[i][j].replace(",", ";");
+                data[i][j] = data[i][j].replace("[", "");
+                data[i][j] = data[i][j].replace("]", "");
+                data[i][j] += ",";
+            }
+            cells.addAll(Arrays.asList(data[i]));
+            cells.add(",");
+        }
+        try {
+            CSVfileHandler.saveFile(path, cells);
+        }catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
     private static class OilFileHandler {

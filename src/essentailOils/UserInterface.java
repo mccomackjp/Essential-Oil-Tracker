@@ -73,6 +73,7 @@ public class UserInterface extends JFrame{
         oilsListTable.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+        controller.saveFile("data/test.csv", oilOutput);
     }
 
     private void filterOils() {
