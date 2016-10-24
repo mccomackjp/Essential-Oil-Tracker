@@ -1,8 +1,8 @@
 package essentailOils;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
+import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,9 +14,11 @@ import java.awt.event.KeyListener;
  */
 public class UserInterface extends JFrame{
 
-    private JTable oilsListOutput;
+    private JTable oilsListTable;
 
-	private JTextField filterInput;
+    private DefaultTableModel tableModel;
+
+    private JTextField filterInput;
 
     private JTextField negativeFilterInput;
 
@@ -40,14 +42,13 @@ public class UserInterface extends JFrame{
 
         String[][] tableData = new String[0][0];
         oilsListHeader = new String[] {"Oil Name","Attributes", "Clashes"};
-        TableModel tableModel = new DefaultTableModel(tableData, oilsListHeader);
+        tableModel = new DefaultTableModel(tableData, oilsListHeader);
         JPanel topLayout = new JPanel();
 		JButton filterButton = new JButton("Filter Results");
 		filterInput = new JTextField(20);
         negativeFilterInput = new JTextField(20);
-        oilsListOutput = new JTable(tableModel);
-        JScrollPane scrollPane = new JScrollPane(oilsListOutput);
-        oilsListOutput.setFillsViewportHeight(true);
+        oilsListTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(oilsListTable);
         scrollPane.setSize(this.getSize());
         filterButton.addActionListener(e-> filterOils());
 
@@ -65,15 +66,39 @@ public class UserInterface extends JFrame{
         setVisible(true);
 	}
 
+
+    public void updateOutput(String[][] oilOutput) {
+        tableModel = new DefaultTableModel(oilOutput, oilsListHeader);
+        oilsListTable.setModel(tableModel);
+        oilsListTable.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
+        oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
+        oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+    }
+
     private void filterOils() {
         controller.filterOilOutput(filterInput.getText().trim(),
                 negativeFilterInput.getText().trim());
     }
 
+    private class CellRenderer extends JTextArea implements TableCellRenderer{
 
-    public void updateOutput(String[][] oilOutput) {
-        oilsListOutput.setModel(new DefaultTableModel(oilOutput, oilsListHeader));
-        //oilsListOutput.setText(oilOutput);
+        JTextArea textArea;
+
+        public CellRenderer(){
+            textArea = new JTextArea();
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            this.setText((String) value);
+            this.setLineWrap(true);
+            this.setWrapStyleWord(true);
+            setSize(new Dimension(table.getColumnModel().getColumn(column).getWidth(), Short.MAX_VALUE));
+            int rowHeight = table.getRowHeight(row);
+            table.setRowHeight(row, Math.max(rowHeight, getPreferredSize().height));
+            return this;
+        }
+
     }
 
     private class KeyEventHandler implements KeyListener {
@@ -94,5 +119,7 @@ public class UserInterface extends JFrame{
                 filterOils();
             }
         }
+
     }
+
 }
