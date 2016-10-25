@@ -1,7 +1,6 @@
 package essentailOils;
 
 import java.util.Collection;
-import java.util.Formatter;
 import java.util.TreeSet;
 
 /**
