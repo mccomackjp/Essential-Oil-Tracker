@@ -36,7 +36,7 @@ public class UserInterface extends JFrame{
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
         setTitle("Essential Oil Tracker");
-        setSize(800, 900);
+        setSize(900, 900);
 
         KeyEventHandler keyHandler = new KeyEventHandler();
 
@@ -44,28 +44,35 @@ public class UserInterface extends JFrame{
         oilsListHeader = new String[] {"Oil Name","Attributes", "Clashes", "Price per Ounce",
                 "Concentrations"};
         tableModel = new DefaultTableModel(tableData, oilsListHeader);
-        JPanel topLayout = new JPanel();
+        JPanel topPanel = new JPanel();
 		JButton filterButton = new JButton("Filter Results");
+        JButton addOilButton = new JButton("Add Oil");
 		filterInput = new JTextField(20);
         negativeFilterInput = new JTextField(20);
         oilsListTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(oilsListTable);
         scrollPane.setSize(this.getSize());
         filterButton.addActionListener(e-> filterOils());
+        addOilButton.addActionListener(e-> addOil());
 
         filterInput.addKeyListener(keyHandler);
         negativeFilterInput.addKeyListener(keyHandler);
 
-        topLayout.add(filterButton);
-        topLayout.add(new JLabel("Include:"));
-        topLayout.add(filterInput);
-        topLayout.add(new JLabel("Exclude clash:"));
-        topLayout.add(negativeFilterInput);
-        add(topLayout, BorderLayout.NORTH);
+        topPanel.add(filterButton);
+        topPanel.add(new JLabel("Include:"));
+        topPanel.add(filterInput);
+        topPanel.add(new JLabel("Exclude clash:"));
+        topPanel.add(negativeFilterInput);
+        topPanel.add(addOilButton);
+        add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
 	}
+
+    public void errorMessage(String message){
+        JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
 
     public void updateOutput(String[][] oilOutput) {
@@ -75,6 +82,10 @@ public class UserInterface extends JFrame{
         oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
         controller.saveFile("data/oils.csv", oilOutput);
+    }
+
+    private void addOil(){
+        new AddOilInterface(controller, controller.getOils());
     }
 
     private void filterOils() {

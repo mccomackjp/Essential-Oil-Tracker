@@ -36,18 +36,19 @@ public class EssentialOilsTracker {
 		initGUI();
 	}
 
-	private void initGUI() {
-		ui = new UserInterface(this);
-	}
-
-	private void loadOilData() {
-        oils = OilFileHandler.loadFile(filePath);
-	}
-
 	public static void main(String[] args){
 		EssentialOilsTracker eot = new EssentialOilsTracker();
         eot.filterOilOutput("", "");
 	}
+
+    public void addOil(String oilData){
+        oils.add(OilFileHandler.parseOilDataLine(oilData));
+        updateOilOutPut(oils);
+    }
+
+    public void errorMessage(String message){
+        ui.errorMessage(message);
+    }
 
     public void filterOilOutput(String filter, String negFilter){
         boolean hasFilter = true;
@@ -78,6 +79,18 @@ public class EssentialOilsTracker {
         }
         String[][] outPut = updateOilOutPut(filteredOils);
         ui.updateOutput(outPut);
+    }
+
+    private void initGUI() {
+        ui = new UserInterface(this);
+    }
+
+    private void loadOilData() {
+        oils = OilFileHandler.loadFile(filePath);
+    }
+
+    public List<EssentialOil> getOils() {
+        return oils;
     }
 
     private boolean oilDoesNotClash(EssentialOil oil, List<EssentialOil> oils){
