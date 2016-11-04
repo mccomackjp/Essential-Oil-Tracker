@@ -46,6 +46,11 @@ public class EssentialOilsTracker {
         updateOilOutPut(oils);
     }
 
+    public void addOil(EssentialOil oil){
+        oils.add(oil);
+        updateOilOutPut(oils);
+    }
+
     public void errorMessage(String message){
         ui.errorMessage(message);
     }
@@ -109,7 +114,7 @@ public class EssentialOilsTracker {
             if (concentrations.size() > 0){
                 data[i][4] = oils.get(i).getConcentrations().toString();
             } else {
-                data[i][4] = "100%";
+                data[i][4] = "pure";
             }
 
         }

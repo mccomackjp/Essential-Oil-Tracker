@@ -2,7 +2,6 @@ package essentailOils;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.text.BadLocationException;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
