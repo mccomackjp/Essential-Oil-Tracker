@@ -16,7 +16,7 @@ public class AddOilInterface extends JFrame {
 
     private List<EssentialOil> oils;
 
-    ArrayList<String> concentrations;
+    private ArrayList<String> concentrations;
 
     private int totalConcentration;
 
@@ -44,12 +44,14 @@ public class AddOilInterface extends JFrame {
     }
 
     private void removeMix() {
-        Object[] selection = concentrations.toArray();
-        String result = (String) JOptionPane.showInputDialog(null, "Remove oil from mixture",
-                "Remove oil", JOptionPane.PLAIN_MESSAGE, null, selection, selection[0]);
-        concentrations.remove(result);
-        totalConcentration -= getPercent(result);
-        updateOutput();
+        if (totalConcentration > 0) {
+            Object[] selection = concentrations.toArray();
+            String result = (String) JOptionPane.showInputDialog(null, "Remove oil from mixture",
+                    "Remove oil", JOptionPane.PLAIN_MESSAGE, null, selection, selection[0]);
+            concentrations.remove(result);
+            totalConcentration -= getPercent(result);
+            updateOutput();
+        }
     }
 
     private int getPercent(String value) {
@@ -85,10 +87,7 @@ public class AddOilInterface extends JFrame {
     }
 
     private void addNewOil() {
-        EssentialOil oil = new EssentialOil(oilNameInput.getText());
-        for (Object s : concentrations.toArray()){
-            System.out.println(s);
-        }
+        controller.addNewOil(oilNameInput.getText(), concentrations);
     }
 
     private void initGUI(){

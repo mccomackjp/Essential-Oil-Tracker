@@ -62,7 +62,11 @@ public class EssentialOil {
         return concentrations;
     }
 
-    public void addConcentrations(String concetration) {
+    public void addConcentrations(Collection<String> concentrations){
+        this.concentrations.addAll(concentrations);
+    }
+
+    public void addConcentration(String concetration) {
         concentrations.add(concetration);
     }
 
