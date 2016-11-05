@@ -3,8 +3,10 @@ package essentailOils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+
+//TODO troubleshoot concentrations not line wrapping
+//TODO add error logger
 
 /**
  * @author mccomackjp
@@ -24,7 +26,7 @@ public class EssentialOilsTracker {
 	public EssentialOilsTracker(){
         numColumns = 5;
         oils = new ArrayList<>();
-        filePath = "data/EssentialOilsData.csv";
+        filePath = "data/oils.csv";
 		loadOilData();
 		initGUI();
 	}
@@ -65,8 +67,7 @@ public class EssentialOilsTracker {
                 filteredOils.add(oil);
             }
         }
-        String[][] outPut = updateOilOutPut(filteredOils);
-        ui.updateOutput(outPut);
+        ui.updateOutput(buildOilTable(filteredOils));
     }
 
     private void initGUI() {
@@ -86,15 +87,14 @@ public class EssentialOilsTracker {
         return false;
     }
 
-    private String[][] updateOilOutPut(List<EssentialOil> oils){
+    private String[][] buildOilTable(List<EssentialOil> oils){
         String[][] data = new String[oils.size()][numColumns];
         for (int i=0; i<oils.size(); i++){
             data[i][0] = oils.get(i).getName();
             data[i][1] = oils.get(i).getAttributes().toString();
             data[i][2] = oils.get(i).getClashes().toString();
-            data[i][3] = "$" + String.valueOf(oils.get(i).getPricePerOunce());
-            Collection<String> concentrations = oils.get(i).getConcentrations();
-            if (concentrations.size() > 0){
+            data[i][3] = String.valueOf(oils.get(i).getPricePerOunce());
+            if (oils.get(i).getConcentrations().size() > 0){
                 data[i][4] = oils.get(i).getConcentrations().toString();
             } else {
                 data[i][4] = "pure";
@@ -132,16 +132,14 @@ public class EssentialOilsTracker {
         addAttributesFromConcentrations(oil, concentrations);
         addClashesFromConcentrations(oil, concentrations);
         oils.add(oil);
-        updateOilOutPut(oils);
+        ui.updateOutput(buildOilTable(oils));
     }
 
-    //TODO Troubleshoot ArrayIndexOutOfBoundsException: -1
     private void addAttributesFromConcentrations(EssentialOil oil, List<String> concentrations){
         for (int i = 0; i < concentrations.size(); i++){
             String name = concentrations.get(i);
-            name = name.substring(name.indexOf("drops") + 5, name.length()).trim().toLowerCase();
-            System.out.println(oils.get(oils.indexOf(name))); //troubleshootings
-            oils.get(oils.indexOf(name)).getAttributes().forEach(attribute -> {
+            name = name.substring(name.indexOf("drops") + 5, name.length()).trim();
+            oils.get(oils.indexOf(new EssentialOil(name))).getAttributes().forEach(attribute -> {
                if (!oil.containsAttribute(attribute)){
                    oil.addAttribute(attribute);
                }
@@ -150,11 +148,10 @@ public class EssentialOilsTracker {
     }
 
     private void addClashesFromConcentrations(EssentialOil oil, List<String> concentrations){
-        String[] names = new String[concentrations.size()];
-        for (int i = 0; i < names.length; i++){
-            names[i] = concentrations.get(i);
-            names[i] = names[i].substring(names[i].indexOf("drops") + 6, names[i].length());
-            oils.get(oils.indexOf(names[i])).getClashes().forEach(clash -> {
+        for (int i = 0; i < concentrations.size(); i++){
+            String name = concentrations.get(i);
+            name = name.substring(name.indexOf("drops") + 5, name.length()).trim();
+            oils.get(oils.indexOf(new EssentialOil(name))).getClashes().forEach(clash -> {
                 if (!oil.containsClash(clash)) {
                     oil.addClash(clash);
                 }

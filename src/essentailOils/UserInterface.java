@@ -25,6 +25,8 @@ public class UserInterface extends JFrame{
 
     private String[] oilsListHeader;
 
+    private String[][] oilTable;
+
 	public UserInterface(EssentialOilsTracker controller){
 		this.controller = controller;
 		initGUI();
@@ -35,7 +37,7 @@ public class UserInterface extends JFrame{
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
         setTitle("Essential Oil Tracker");
-        setSize(900, 900);
+        setSize(1100, 900);
 
         KeyEventHandler keyHandler = new KeyEventHandler();
 
@@ -46,6 +48,8 @@ public class UserInterface extends JFrame{
         JPanel topPanel = new JPanel();
 		JButton filterButton = new JButton("Filter Results");
         JButton addOilButton = new JButton("Add Oil");
+        JButton saveListButton = new JButton("Save oils");
+        JButton saveBackupButton = new JButton("Save backup file");
 		filterInput = new JTextField(20);
         negativeFilterInput = new JTextField(20);
         oilsListTable = new JTable(tableModel);
@@ -53,6 +57,8 @@ public class UserInterface extends JFrame{
         scrollPane.setSize(this.getSize());
         filterButton.addActionListener(e-> filterOils());
         addOilButton.addActionListener(e-> addOil());
+        saveListButton.addActionListener(e-> saveFile());
+        saveBackupButton.addActionListener(e-> saveBackupFile());
 
         filterInput.addKeyListener(keyHandler);
         negativeFilterInput.addKeyListener(keyHandler);
@@ -63,11 +69,21 @@ public class UserInterface extends JFrame{
         topPanel.add(new JLabel("Exclude clash:"));
         topPanel.add(negativeFilterInput);
         topPanel.add(addOilButton);
+        topPanel.add(saveListButton);
+        topPanel.add(saveBackupButton);
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
 	}
+
+    private void saveBackupFile() {
+        controller.saveFile("data/oilsBackup.csv", oilTable);
+    }
+
+    private void saveFile() {
+        controller.saveFile("data/oils.csv", oilTable);
+    }
 
     public void errorMessage(String message){
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -80,7 +96,7 @@ public class UserInterface extends JFrame{
         oilsListTable.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
-        controller.saveFile("data/oils.csv", oilOutput);
+        oilTable = oilOutput;
     }
 
     private void addOil(){
@@ -94,7 +110,7 @@ public class UserInterface extends JFrame{
 
     private class CellRenderer extends JTextArea implements TableCellRenderer{
 
-        JTextArea textArea;
+        public JTextArea textArea;
 
         public CellRenderer(){
             textArea = new JTextArea();

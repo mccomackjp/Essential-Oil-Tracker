@@ -88,6 +88,7 @@ public class AddOilInterface extends JFrame {
 
     private void addNewOil() {
         controller.addNewOil(oilNameInput.getText(), concentrations);
+        closeWindow();
     }
 
     private void initGUI(){

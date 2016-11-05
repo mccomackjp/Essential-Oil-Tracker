@@ -26,6 +26,17 @@ public class EssentialOil {
         setPricePerOunce(0.00);
 	}
 
+    @Override
+    public boolean equals(Object o){
+        boolean result = false;
+        if (o instanceof String){
+            result = equals((String) o);
+        } else if (o instanceof EssentialOil){
+            result = equals((EssentialOil) o);
+        }
+        return result;
+    }
+
     public boolean equals(String name){
         return this.name.replaceAll(" ", "").equalsIgnoreCase(name.replaceAll(" ", ""));
     }

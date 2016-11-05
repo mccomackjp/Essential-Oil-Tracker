@@ -69,7 +69,9 @@ public class OilFileHandler {
             }
             if (concentrations != null) {
                 for (String s : concentrations) {
-                    oil.addConcentration(s);
+                    if(!s.equals("pure")) {
+                        oil.addConcentration(s);
+                    }
                 }
             }
         }
