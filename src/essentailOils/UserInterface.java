@@ -96,6 +96,8 @@ public class UserInterface extends JFrame{
         oilsListTable.getColumnModel().getColumn(0).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(1).setCellRenderer(new CellRenderer());
         oilsListTable.getColumnModel().getColumn(2).setCellRenderer(new CellRenderer());
+        oilsListTable.getColumnModel().getColumn(3).setCellRenderer(new CellRenderer());
+        oilsListTable.getColumnModel().getColumn(4).setCellRenderer(new CellRenderer());
         oilTable = oilOutput;
     }
 
