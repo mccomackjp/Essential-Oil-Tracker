@@ -65,15 +65,18 @@ public class UserInterface extends JFrame{
         JMenu menu = new JMenu("File");
         JMenuItem saveFileItem = new JMenuItem("Save");
         JMenuItem saveBackupItem = new JMenuItem("Save backup");
+        JMenuItem loadBackupItem = new JMenuItem("Load backup");
         JMenuItem editSynonymsItem = new JMenuItem("Edit synonyms list");
         saveFileItem.addActionListener(e-> saveFile());
         saveBackupItem.addActionListener(e-> saveBackupFile());
         editSynonymsItem.addActionListener(e-> editSynonyms());
+        loadBackupItem.addActionListener(e-> loadBackupfile());
 
         setJMenuBar(menuBar);
         menuBar.add(menu);
         menu.add(saveFileItem);
         menu.add(saveBackupItem);
+        menu.add(loadBackupItem);
         menu.add(editSynonymsItem);
 
         filterInput.addKeyListener(keyHandler);
@@ -92,9 +95,14 @@ public class UserInterface extends JFrame{
         setVisible(true);
 	}
 
+    private void loadBackupfile() {
+        //TODO
+        message("Coming to an essential oil app near you!", "To be implemented in the future");
+    }
+
     private void editSynonyms() {
         //TODO
-        message("Coming to an essential oil app near you", "To be implemented in the future");
+        message("Coming to an essential oil app near you!", "To be implemented in the future");
     }
 
     private void saveBackupFile() {

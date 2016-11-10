@@ -10,6 +10,7 @@ import java.util.TreeSet;
 
 //TODO add error logger
 //TODO add synonym list
+//TODO add load backup
 
 /**
  * @author mccomackjp
