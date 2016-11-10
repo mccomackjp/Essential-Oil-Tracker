@@ -52,7 +52,7 @@ public class OilFileHandler {
             String[] attributes = oilData[1].split(";");
             String[] clashes = oilData[2].split(";");
             double price = 0.0;
-            if (oilData.length > 3 && oilData[3].length() > 3){
+            if (oilData.length > 3 && oilData[3].length() > 0){
                 price = Double.valueOf(oilData[3]);
             }
             String[] concentrations = null;

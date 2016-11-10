@@ -1,11 +1,15 @@
 package essentailOils;
 
+import userInterface.UserInterface;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeSet;
 
 //TODO add error logger
+//TODO add synonym list
 
 /**
  * @author mccomackjp
@@ -22,10 +26,14 @@ public class EssentialOilsTracker {
 
     private int numColumns;
 
-	public EssentialOilsTracker(){
+    private List<TreeSet<String>> synonyms;
+
+
+    public EssentialOilsTracker(){
         numColumns = 5;
         oils = new ArrayList<>();
         filePath = "data/oils.csv";
+        synonyms = new ArrayList<>();
 		loadOilData();
 		initGUI();
 	}
@@ -125,13 +133,30 @@ public class EssentialOilsTracker {
             }
     }
 
-    public void addNewOil(String oilName, List<String> concentrations) {
+    public void addNewOil(String oilName, List<String> concentrations, int totalDrops) {
         EssentialOil oil = new EssentialOil(oilName);
         oil.addConcentrations(concentrations);
         addAttributesFromConcentrations(oil, concentrations);
         addClashesFromConcentrations(oil, concentrations);
+        addPricePerOunce(oil, concentrations, totalDrops);
         oils.add(oil);
         ui.updateOutput(buildOilTable(oils));
+    }
+
+    private void addPricePerOunce(EssentialOil oil, List<String> concentrations, int totalDrops) {
+        double totalPrice = 0.0;
+        for (String con : concentrations){
+            EssentialOil temp = new EssentialOil(con.substring(con.indexOf("drops ") + 6,
+                    con.length()));
+            temp = oils.get(oils.indexOf(temp));
+            double price = temp.getPricePerOunce();
+            if (price <= 0){
+                ui.errorMessage("Price per ounce for " + temp.getName() + " is 0");
+            } else {
+                totalPrice += price * Double.valueOf(con.substring(0, con.indexOf(" ")));
+            }
+        }
+        oil.setPricePerOunce(totalPrice/totalDrops);
     }
 
     private void addAttributesFromConcentrations(EssentialOil oil, List<String> concentrations){

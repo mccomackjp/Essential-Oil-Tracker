@@ -1,4 +1,7 @@
-package essentailOils;
+package userInterface;
+
+import essentailOils.EssentialOil;
+import essentailOils.EssentialOilsTracker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +21,7 @@ public class AddOilInterface extends JFrame {
 
     private ArrayList<String> concentrations;
 
-    private int totalConcentration;
+    private int totalDrops;
 
     private EssentialOilsTracker controller;
 
@@ -38,18 +41,18 @@ public class AddOilInterface extends JFrame {
         Object result = JOptionPane.showInputDialog(null, new Object[]{"Drop ratio of " +
                 "Concentration: ", percentInput}, "Add mixture and concentration",
                 JOptionPane.PLAIN_MESSAGE, null, selection, selection[0]);
-        totalConcentration += Integer.valueOf(percentInput.getText());
+        totalDrops += Integer.valueOf(percentInput.getText());
         concentrations.add(percentInput.getText() + " drops " + result.toString());
         updateOutput();
     }
 
     private void removeMix() {
-        if (totalConcentration > 0) {
+        if (totalDrops > 0) {
             Object[] selection = concentrations.toArray();
             String result = (String) JOptionPane.showInputDialog(null, "Remove oil from mixture",
                     "Remove oil", JOptionPane.PLAIN_MESSAGE, null, selection, selection[0]);
             concentrations.remove(result);
-            totalConcentration -= getPercent(result);
+            totalDrops -= getPercent(result);
             updateOutput();
         }
     }
@@ -63,7 +66,7 @@ public class AddOilInterface extends JFrame {
     }
 
     private void updateOutput(){
-        String text = "<html><body>Total drops: " + String.valueOf(totalConcentration) +
+        String text = "<html><body>Total drops: " + String.valueOf(totalDrops) +
                 "<br>";
         for (String s : concentrations){
             text += s + "<br>";
@@ -79,7 +82,7 @@ public class AddOilInterface extends JFrame {
     private void updateOils() {
         if (oilNameInput.getText().equals("oil name")){
             controller.errorMessage("Please enter an oil name");
-        } else if (totalConcentration == 0){
+        } else if (totalDrops == 0){
             controller.errorMessage("Please add an oil to the mix");
         } else {
             addNewOil();
@@ -87,7 +90,7 @@ public class AddOilInterface extends JFrame {
     }
 
     private void addNewOil() {
-        controller.addNewOil(oilNameInput.getText(), concentrations);
+        controller.addNewOil(oilNameInput.getText(), concentrations, totalDrops);
         closeWindow();
     }
 
@@ -98,14 +101,14 @@ public class AddOilInterface extends JFrame {
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
 
-        totalConcentration = 0;
+        totalDrops = 0;
         JLabel nameLabel = new JLabel("Set Name: ");
         oilNameInput = new JTextField("oil name");
         JButton addMixButton = new JButton("Add oil to mix");
         JButton removeMixButton = new JButton("Removed oil from mix");
         JButton okButton = new JButton("OK");
         JButton cancelButton = new JButton("Cancel");
-        output = new JLabel("Total Concentration : " + String.valueOf(totalConcentration)+  "\n");
+        output = new JLabel("Total Concentration : " + String.valueOf(totalDrops)+  "\n");
         concentrations = new ArrayList<>();
         JPanel topPanel = new JPanel();
         JPanel botPanel = new JPanel();

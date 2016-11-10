@@ -3,6 +3,7 @@ package essentailOils;
 import java.util.Collection;
 import java.util.TreeSet;
 
+//TODO Format price
 /**
  * @author mccomackjp
  * @version 1.0
@@ -51,6 +52,16 @@ public class EssentialOil {
 
     public boolean containsAttribute(String attribute){
         return attributes.contains(attribute.toLowerCase());
+    }
+
+    public boolean containsClash(String clash, Collection<Collection> synonyms){
+        // TODO: 11/10/2016
+        return false;
+    }
+
+    public boolean containsAttribute(String attribute, Collection<Collection> synonyms){
+        // TODO: 11/10/2016
+        return false;
     }
 
     public void addAttribute(String attribute){

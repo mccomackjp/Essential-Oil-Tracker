@@ -1,10 +1,13 @@
-package essentailOils;
+package userInterface;
 
+import essentailOils.EssentialOilsTracker;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+//TODO add file menu
 
 /**
  * @author mccomackjp
@@ -49,7 +52,6 @@ public class UserInterface extends JFrame{
 		JButton filterButton = new JButton("Filter Results");
         JButton addOilButton = new JButton("Add Oil");
         JButton saveListButton = new JButton("Save oils");
-        JButton saveBackupButton = new JButton("Save backup file");
 		filterInput = new JTextField(20);
         negativeFilterInput = new JTextField(20);
         oilsListTable = new JTable(tableModel);
@@ -58,7 +60,21 @@ public class UserInterface extends JFrame{
         filterButton.addActionListener(e-> filterOils());
         addOilButton.addActionListener(e-> addOil());
         saveListButton.addActionListener(e-> saveFile());
-        saveBackupButton.addActionListener(e-> saveBackupFile());
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("File");
+        JMenuItem saveFileItem = new JMenuItem("Save");
+        JMenuItem saveBackupItem = new JMenuItem("Save backup");
+        JMenuItem editSynonymsItem = new JMenuItem("Edit synonyms list");
+        saveFileItem.addActionListener(e-> saveFile());
+        saveBackupItem.addActionListener(e-> saveBackupFile());
+        editSynonymsItem.addActionListener(e-> editSynonyms());
+
+        setJMenuBar(menuBar);
+        menuBar.add(menu);
+        menu.add(saveFileItem);
+        menu.add(saveBackupItem);
+        menu.add(editSynonymsItem);
 
         filterInput.addKeyListener(keyHandler);
         negativeFilterInput.addKeyListener(keyHandler);
@@ -70,25 +86,34 @@ public class UserInterface extends JFrame{
         topPanel.add(negativeFilterInput);
         topPanel.add(addOilButton);
         topPanel.add(saveListButton);
-        topPanel.add(saveBackupButton);
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
 	}
 
+    private void editSynonyms() {
+        //TODO
+        message("Coming to an essential oil app near you", "To be implemented in the future");
+    }
+
     private void saveBackupFile() {
         controller.saveFile("data/oilsBackup.csv", oilTable);
+        message("Back up file saved!", "Success");
     }
 
     private void saveFile() {
         controller.saveFile("data/oils.csv", oilTable);
+        message("File saved!", "Success");
     }
 
     public void errorMessage(String message){
         JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    public void message(String message, String title){
+        JOptionPane.showMessageDialog(null, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
 
     public void updateOutput(String[][] oilOutput) {
         tableModel = new DefaultTableModel(oilOutput, oilsListHeader);
