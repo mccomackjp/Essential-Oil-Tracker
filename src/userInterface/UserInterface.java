@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-//TODO add file menu
 
 /**
  * @author mccomackjp
@@ -101,8 +100,7 @@ public class UserInterface extends JFrame{
     }
 
     private void editSynonyms() {
-        //TODO
-        message("Coming to an essential oil app near you!", "To be implemented in the future");
+        controller.editSynonyms();
     }
 
     private void saveBackupFile() {

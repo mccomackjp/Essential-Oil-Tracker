@@ -1,6 +1,6 @@
 package essentailOils;
 
-import userInterface.UserInterface;
+import userInterface.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -144,6 +144,10 @@ public class EssentialOilsTracker {
         ui.updateOutput(buildOilTable(oils));
     }
 
+    public void editSynonyms() {
+        new editSynonymsUI(this, synonyms);
+    }
+
     private void addPricePerOunce(EssentialOil oil, List<String> concentrations, int totalDrops) {
         double totalPrice = 0.0;
         for (String con : concentrations){
@@ -183,7 +187,5 @@ public class EssentialOilsTracker {
             });
         }
     }
-
-
 
 }
