@@ -26,7 +26,7 @@ public class editSynonymsUI extends JFrame {
     private void initGUI() {
         setSize(900, 600);
         setTitle("Edit Synonyms");
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         BorderLayout layout = new BorderLayout();
         setLayout(layout);
 
@@ -36,7 +36,8 @@ public class editSynonymsUI extends JFrame {
         JButton okButton = new JButton("OK");
         JButton cancelButton = new JButton("Cancel");
 
-
+        DefaultListModel model = new DefaultListModel();
+        JList jList = new JList(model);
 
         setVisible(true);
     }
