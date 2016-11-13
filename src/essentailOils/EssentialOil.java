@@ -4,11 +4,7 @@ import java.util.Collection;
 import java.util.TreeSet;
 
 //TODO Format price
-/**
- * @author mccomackjp
- * @version 1.0
- * @created 16-Sep-2016 6:20:28 PM
- */
+
 public class EssentialOil {
 
 	private Collection<String> attributes;

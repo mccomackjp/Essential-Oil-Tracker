@@ -1,4 +1,6 @@
-package essentailOils;
+package fileIO;
+
+import essentailOils.EssentialOil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,9 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mccomackjp on 11/4/2016.
- */
+
 public class OilFileHandler {
 
     public static List<EssentialOil> loadFile(String path){

@@ -1,5 +1,6 @@
 package essentailOils;
 
+import fileIO.OilFileHandler;
 import userInterface.*;
 
 import java.io.IOException;
@@ -11,12 +12,9 @@ import java.util.TreeSet;
 //TODO add error logger
 //TODO add synonym list
 //TODO add load backup
+//TODO add XML Parser
 
-/**
- * @author mccomackjp
- * @version 1.0
- * @created 16-Sep-2016 6:20:28 PM
- */
+
 public class EssentialOilsTracker {
 
 	private List<EssentialOil> oils;
@@ -134,6 +132,10 @@ public class EssentialOilsTracker {
             }
     }
 
+    public void setSynonyms(List<TreeSet<String>> list){
+        synonyms = list;
+    }
+
     public void addNewOil(String oilName, List<String> concentrations, int totalDrops) {
         EssentialOil oil = new EssentialOil(oilName);
         oil.addConcentrations(concentrations);
@@ -188,4 +190,11 @@ public class EssentialOilsTracker {
         }
     }
 
+    public void exit() {
+        System.exit(0);
+    }
+
+    public void saveSynonyms() {
+        //TODO
+    }
 }

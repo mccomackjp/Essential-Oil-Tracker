@@ -8,11 +8,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-/**
- * @author mccomackjp
- * @version 1.0
- * @created 16-Sep-2016 6:20:28 PM
- */
 public class UserInterface extends JFrame{
 
     private JTable oilsListTable;
@@ -50,7 +45,7 @@ public class UserInterface extends JFrame{
         JPanel topPanel = new JPanel();
 		JButton filterButton = new JButton("Filter Results");
         JButton addOilButton = new JButton("Add Oil");
-        JButton saveListButton = new JButton("Save oils");
+        JButton saveAndExitButton = new JButton("Save and Exit");
 		filterInput = new JTextField(20);
         negativeFilterInput = new JTextField(20);
         oilsListTable = new JTable(tableModel);
@@ -58,7 +53,7 @@ public class UserInterface extends JFrame{
         scrollPane.setSize(this.getSize());
         filterButton.addActionListener(e-> filterOils());
         addOilButton.addActionListener(e-> addOil());
-        saveListButton.addActionListener(e-> saveFile());
+        saveAndExitButton.addActionListener(e-> saveAndExit());
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
@@ -87,12 +82,18 @@ public class UserInterface extends JFrame{
         topPanel.add(new JLabel("Exclude clash:"));
         topPanel.add(negativeFilterInput);
         topPanel.add(addOilButton);
-        topPanel.add(saveListButton);
+        topPanel.add(saveAndExitButton);
         add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         setVisible(true);
 	}
+
+    private void saveAndExit() {
+        controller.saveFile("data/oils.csv", oilTable);
+        controller.saveSynonyms();
+        controller.exit();
+    }
 
     private void loadBackupfile() {
         //TODO

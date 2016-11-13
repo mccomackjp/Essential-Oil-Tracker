@@ -8,9 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by mccomackjp on 10/25/2016.
- */
+
 public class AddOilInterface extends JFrame {
 
     private JTextField oilNameInput;
