@@ -72,9 +72,10 @@ public class editSynonymsUI extends JFrame {
     private void updateSynonyms() {
         for (int i=0; i<synonyms.size() && i < inputs.size(); i++){
             Scanner scanner = new Scanner(inputs.get(i).getText());
+            synonyms.get(i).clear();
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine().trim();
-                if (line.length() > 0 && !synonyms.get(i).contains(line)){
+                if (line.length() > 0){
                     synonyms.get(i).add(line);
                 }
             }
