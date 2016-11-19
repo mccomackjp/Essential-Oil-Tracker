@@ -64,7 +64,7 @@ public class UserInterface extends JFrame{
         saveFileItem.addActionListener(e-> saveFile());
         saveBackupItem.addActionListener(e-> saveBackupFile());
         editSynonymsItem.addActionListener(e-> editSynonyms());
-        loadBackupItem.addActionListener(e-> loadBackupfile());
+        loadBackupItem.addActionListener(e-> loadBackupFile());
 
         setJMenuBar(menuBar);
         menuBar.add(menu);
@@ -90,14 +90,17 @@ public class UserInterface extends JFrame{
 	}
 
     private void saveAndExit() {
-        controller.saveFile("data/oils.csv", oilTable);
-        controller.saveSynonyms();
-        controller.exit();
+        if (confirmMessage("Are you sure you wish to save and exit?")) {
+            controller.saveFile("data/oils.csv", oilTable);
+            controller.saveSynonyms();
+            controller.exit();
+        }
     }
 
-    private void loadBackupfile() {
-        //TODO
-        message("Coming to an essential oil app near you!", "To be implemented in the future");
+    private void loadBackupFile() {
+        if (confirmMessage("Are you sure you wish to load the backup file?")){
+            controller.loadNewOilFile("data/oilsBackup.csv");
+        }
     }
 
     private void editSynonyms() {
@@ -105,13 +108,19 @@ public class UserInterface extends JFrame{
     }
 
     private void saveBackupFile() {
-        controller.saveFile("data/oilsBackup.csv", oilTable);
-        message("Back up file saved!", "Success");
-    }
+        if (confirmMessage("Are you sure you wish to save a backup file?")){
+            controller.saveFile("data/oilsBackup.csv", oilTable);
+            message("Back up file saved!", "Success");
+        }
+        }
 
     private void saveFile() {
         controller.saveFile("data/oils.csv", oilTable);
         message("File saved!", "Success");
+    }
+
+    public boolean confirmMessage(String message){
+        return JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(null, message);
     }
 
     public void errorMessage(String message){

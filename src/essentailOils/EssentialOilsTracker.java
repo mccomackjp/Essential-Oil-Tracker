@@ -2,8 +2,8 @@ package essentailOils;
 
 import fileIO.OilFileHandler;
 import userInterface.*;
-
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,20 +21,22 @@ public class EssentialOilsTracker {
 
 	private UserInterface ui;
 
-    private String filePath;
-
     private int numColumns;
 
     private List<TreeSet<String>> synonyms;
 
 
     public EssentialOilsTracker(){
-        numColumns = 5;
-        oils = new ArrayList<>();
-        filePath = "data/oils.csv";
-        synonyms = new ArrayList<>();
-		loadOilData();
-		initGUI();
+        try {
+            synonyms = OilFileHandler.loadSynonymsFile("data/synonymsData.csv");
+        } catch (IOException e){
+            synonyms = new ArrayList<>();
+        } finally{
+            numColumns = 5;
+            oils = new ArrayList<>();
+            loadOilData("data/oils.csv");
+            initGUI();
+        }
 	}
 
 	public static void main(String[] args){
@@ -42,13 +44,24 @@ public class EssentialOilsTracker {
         eot.filterOilOutput("", "");
 	}
 
+
+    public void loadNewOilFile(String filePath){
+        loadOilData(filePath);
+    }
+
     public void errorMessage(String message){
         ui.errorMessage(message);
+    }
+
+    public List<EssentialOil> getOils() {
+        return oils;
     }
 
     public void filterOilOutput(String filter, String negFilter){
         boolean hasFilter = true;
         List<EssentialOil> filteredOils = new ArrayList<>();
+        TreeSet<String> filterSet = getSynonymSet(filter);
+        TreeSet<String> negFilterSet = getSynonymSet(negFilter);
         if (filter == null){
             filter = "";
         }
@@ -62,9 +75,11 @@ public class EssentialOilsTracker {
             if (hasFilter) {
                 if (oil.equals(filter)) {
                     filteredOils.add(oil);
-                } else if (filter.equals("") && !negFilter.equals("") && !oil.containsClash(negFilter)) {
+                } else if (filter.equals("") && !negFilter.equals("")
+                        && !oil.containsClash(negFilter, negFilterSet)) {
                     filteredOils.add(oil);
-                } else if (!filter.equals("") && negFilter.equals("") && oil.containsAttribute(filter)) {
+                } else if (!filter.equals("") && negFilter.equals("")
+                        && oil.containsAttribute(filter, filterSet)) {
                     filteredOils.add(oil);
                 } else if (oil.containsAttribute(filter) && !oil.containsClash(negFilter)) {
                     filteredOils.add(oil);
@@ -76,16 +91,23 @@ public class EssentialOilsTracker {
         ui.updateOutput(buildOilTable(filteredOils));
     }
 
+    private TreeSet<String> getSynonymSet(String filter) {
+        TreeSet<String> set = null;
+        for (TreeSet<String> treeSet : synonyms){
+            if (treeSet.contains(filter)){
+                set = treeSet;
+                break;
+            }
+        }
+        return set;
+    }
+
     private void initGUI() {
         ui = new UserInterface(this);
     }
 
-    private void loadOilData() {
-        oils = OilFileHandler.loadFile(filePath);
-    }
-
-    public List<EssentialOil> getOils() {
-        return oils;
+    private void loadOilData(String filePath) {
+        oils = OilFileHandler.loadOilFile(filePath);
     }
 
     private boolean oilDoesNotClash(EssentialOil oil, List<EssentialOil> oils){
@@ -94,12 +116,13 @@ public class EssentialOilsTracker {
     }
 
     private String[][] buildOilTable(List<EssentialOil> oils){
+        DecimalFormat df = new DecimalFormat("0.00");
         String[][] data = new String[oils.size()][numColumns];
         for (int i=0; i<oils.size(); i++){
             data[i][0] = oils.get(i).getName();
             data[i][1] = oils.get(i).getAttributes().toString();
             data[i][2] = oils.get(i).getClashes().toString();
-            data[i][3] = String.valueOf(oils.get(i).getPricePerOunce());
+            data[i][3] = df.format(oils.get(i).getPricePerOunce());
             if (oils.get(i).getConcentrations().size() > 0){
                 data[i][4] = oils.get(i).getConcentrations().toString();
             } else {
@@ -126,7 +149,7 @@ public class EssentialOilsTracker {
             cells.add(",");
         }
         try {
-            OilFileHandler.saveFile(path, cells);
+            OilFileHandler.saveOilFile(path, cells);
         }catch (IOException e) {
                 e.printStackTrace();
             }
@@ -195,6 +218,10 @@ public class EssentialOilsTracker {
     }
 
     public void saveSynonyms() {
-        //TODO
+        try {
+            OilFileHandler.saveSynonymsFile("data/synonymsData.csv", synonyms);
+        } catch (IOException e){
+            errorMessage(e.getMessage());
+        }
     }
 }

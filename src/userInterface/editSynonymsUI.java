@@ -41,7 +41,7 @@ public class editSynonymsUI extends JFrame {
         JButton cancelButton = new JButton("Cancel");
         panel = new JPanel();
 
-        addListButton.addActionListener(e-> addList());
+        addListButton.addActionListener(e-> addList(null));
         okButton.addActionListener(e-> updateSynonyms());
         cancelButton.addActionListener(e-> closeWindow());
 
@@ -52,12 +52,25 @@ public class editSynonymsUI extends JFrame {
         add(bottomPanel, BorderLayout.SOUTH);
         add(new JScrollPane(panel), BorderLayout.CENTER);
 
+        loadCurrentSynonyms();
         updateInputs();
         setVisible(true);
     }
 
+    private void loadCurrentSynonyms() {
+        for (TreeSet<String> set : synonyms){
+            String text = "";
+            for (String s : set){
+                text += s + "\n";
+            }
+            if (!text.equals("")){
+                addList(text);
+            }
+        }
+    }
+
     private void updateSynonyms() {
-        for (int i=0; i<synonyms.size(); i++){
+        for (int i=0; i<synonyms.size() && i < inputs.size(); i++){
             Scanner scanner = new Scanner(inputs.get(i).getText());
             while (scanner.hasNextLine()){
                 String line = scanner.nextLine().trim();
@@ -105,9 +118,12 @@ public class editSynonymsUI extends JFrame {
         revalidate();
     }
 
-    private void addList() {
+    private void addList(String text) {
         JTextArea area = new JTextArea();
         area.setPreferredSize(new Dimension(200, 470));
+        if (text!=null){
+            area.setText(text);
+        }
         inputs.add(area);
         updateInputs();
     }

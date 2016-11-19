@@ -3,7 +3,6 @@ package essentailOils;
 import java.util.Collection;
 import java.util.TreeSet;
 
-//TODO Format price
 
 public class EssentialOil {
 
@@ -50,14 +49,31 @@ public class EssentialOil {
         return attributes.contains(attribute.toLowerCase());
     }
 
-    public boolean containsClash(String clash, Collection<Collection> synonyms){
-        // TODO: 11/10/2016
-        return false;
+
+    public boolean containsClash(String clash, TreeSet<String> synonyms){
+        boolean found = containsClash(clash);
+        if (synonyms != null && !found && synonyms.contains(clash.toLowerCase())){
+            for (String s : synonyms){
+                found = clashes.contains(s.toLowerCase());
+                if (found){
+                    break;
+                }
+            }
+        }
+        return found;
     }
 
-    public boolean containsAttribute(String attribute, Collection<Collection> synonyms){
-        // TODO: 11/10/2016
-        return false;
+    public boolean containsAttribute(String attribute, TreeSet<String> synonyms){
+        boolean found = containsAttribute(attribute);
+        if (synonyms != null && !found && synonyms.contains(attribute.toLowerCase())){
+            for (String s : synonyms){
+                found = attributes.contains(s.toLowerCase());
+                if (found){
+                    break;
+                }
+            }
+        }
+        return found;
     }
 
     public void addAttribute(String attribute){

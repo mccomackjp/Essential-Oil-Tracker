@@ -4,35 +4,34 @@ import essentailOils.EssentialOil;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 
 
 public class OilFileHandler {
 
-    public static List<EssentialOil> loadFile(String path){
+    public static List<EssentialOil> loadOilFile(String path){
         List<EssentialOil> oils = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(path))){
-            String line = reader.readLine();
+            reader.readLine(); //ignore first line of file
+            String line;
             while ((line = reader.readLine()) != null){
                 EssentialOil oil = parseOilDataLine(line);
                 if (oil!=null) {
                     oils.add(oil);
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return oils;
     }
 
-    public static void saveFile(String path, List<String> cells) throws IOException{
+    public static void saveOilFile(String path, List<String> cells) throws IOException{
         BufferedWriter writer = new BufferedWriter(new FileWriter(path));
         for (String cell : cells){
             if (cell.equals(",")){
@@ -44,7 +43,34 @@ public class OilFileHandler {
         writer.close();
     }
 
-    public static EssentialOil parseOilDataLine(String line){
+    public static List<TreeSet<String>> loadSynonymsFile(String path) throws IOException {
+        ArrayList<TreeSet<String>> list = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader(path));
+        String line;
+        while ((line = reader.readLine()) != null){
+            String[] synonyms = line.split(",");
+            TreeSet<String> set = new TreeSet<>();
+            for (String s : synonyms){
+                set.add(s.replace(",", "").trim());
+            }
+            list.add(set);
+        }
+        return list;
+    }
+
+    public static void saveSynonymsFile(String path, List<TreeSet<String>> synonyms)
+            throws IOException{
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+        for (TreeSet<String> set : synonyms){
+            for (String s : set){
+                writer.write(s+",");
+            }
+            writer.newLine();
+        }
+        writer.close();
+    }
+
+    private static EssentialOil parseOilDataLine(String line) {
         EssentialOil oil = null;
         if (line.length()>5) {
             String[] oilData = line.split(",");
