@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
-
-//TODO add error logger
-//TODO add synonym list
-//TODO add load backup
-//TODO add XML Parser
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 
 public class EssentialOilsTracker {
@@ -25,10 +23,15 @@ public class EssentialOilsTracker {
 
     private List<TreeSet<String>> synonyms;
 
+    private Logger logger;
+
 
     public EssentialOilsTracker(){
         try {
             synonyms = OilFileHandler.loadSynonymsFile("data/synonymsData.csv");
+            logger = Logger.getLogger("Error Log");
+            FileHandler fileHandler = new FileHandler("data/errorLog.txt");
+            fileHandler.setFormatter(new SimpleFormatter());
         } catch (IOException e){
             synonyms = new ArrayList<>();
         } finally{
@@ -44,6 +47,9 @@ public class EssentialOilsTracker {
         eot.filterOilOutput("", "");
 	}
 
+	public void logError(String message, Exception e){
+	    logger.warning(message + ": "  + e.getMessage());
+    }
 
     public void loadNewOilFile(String filePath){
         loadOilData(filePath);
@@ -110,11 +116,6 @@ public class EssentialOilsTracker {
         oils = OilFileHandler.loadOilFile(filePath);
     }
 
-    private boolean oilDoesNotClash(EssentialOil oil, List<EssentialOil> oils){
-        //TODO implement
-        return false;
-    }
-
     private String[][] buildOilTable(List<EssentialOil> oils){
         DecimalFormat df = new DecimalFormat("0.00");
         String[][] data = new String[oils.size()][numColumns];
@@ -151,7 +152,8 @@ public class EssentialOilsTracker {
         try {
             OilFileHandler.saveOilFile(path, cells);
         }catch (IOException e) {
-                e.printStackTrace();
+                errorMessage("Failed to save oil file");
+                logError("Failed to save oil file", e);
             }
     }
 
@@ -222,6 +224,7 @@ public class EssentialOilsTracker {
             OilFileHandler.saveSynonymsFile("data/synonymsData.csv", synonyms);
         } catch (IOException e){
             errorMessage(e.getMessage());
+            logError("Failed to save synonym file", e);
         }
     }
 }
