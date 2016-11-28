@@ -12,6 +12,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+//TODO fix save and exit to save all oils, not just displayed oils
+
 
 public class EssentialOilsTracker {
 
